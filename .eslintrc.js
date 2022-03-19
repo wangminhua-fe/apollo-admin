@@ -146,6 +146,7 @@ module.exports = {
     'switch-colon-spacing': 'warn',
     // 强制箭头函数的箭头前后使用一致的空格
     'arrow-spacing': 'warn',
+    // eslint-disable-next-line no-dupe-keys
     'no-var': 'warn',
     'prefer-const': 'warn',
     'prefer-rest-params': 'warn',
