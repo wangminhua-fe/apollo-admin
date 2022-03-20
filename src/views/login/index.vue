@@ -1,28 +1,28 @@
 <template>
   <div class="login-container">
     <el-form ref="loginFromRef" class="login-form">
-      <div class="title-container">
-        <h3 class="title">用户登录</h3>
+      <div class="login-form-title">
+        <h3 class="login-form-title__content">用户登录</h3>
       </div>
 
       <el-form-item prop="username">
-        <span class="svg-container">
+        <span class="login-form-svg">
           <svg-icon icon="user" />
         </span>
         <el-input placeholder="username" name="username" type="text" />
       </el-form-item>
 
       <el-form-item prop="password">
-        <span class="svg-container">
+        <span class="login-form-svg">
           <svg-icon icon="password" />
         </span>
         <el-input placeholder="password" name="password" />
-        <span class="show-pwd">
+        <span class="login-form-svg__pwd">
           <svg-icon icon="password" />
         </span>
       </el-form-item>
 
-      <el-button type="primary">登 录</el-button>
+      <el-button type="primary" class="login-form-btn">登 录</el-button>
     </el-form>
   </div>
 </template>
@@ -63,6 +63,7 @@ $cursor: #fff;
 
       input {
         background: transparent;
+        box-shadow: none;
         border: 0px;
         -webkit-appearance: none;
         border-radius: 0px;
@@ -72,59 +73,39 @@ $cursor: #fff;
         caret-color: $cursor;
       }
     }
-  }
 
-  .tips {
-    font-size: 16px;
-    line-height: 28px;
-    color: #fff;
-    margin-bottom: 10px;
+    &-svg {
+      padding: 6px 5px 6px 15px;
+      color: $dark_gray;
+      vertical-align: middle;
+      display: inline-block;
 
-    span {
-      &:first-of-type {
-        margin-right: 16px;
+      &__pwd {
+        position: absolute;
+        right: 10px;
+        top: 7px;
+        font-size: 16px;
+        color: $dark_gray;
+        cursor: pointer;
+        user-select: none;
       }
     }
-  }
 
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    display: inline-block;
-  }
+    &-title {
+      position: relative;
 
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
+      &__content {
+        font-size: 26px;
+        color: $light_gray;
+        margin: 0px auto 40px auto;
+        text-align: center;
+        font-weight: bold;
+      }
     }
 
-    ::v-deep .lang-select {
-      position: absolute;
-      top: 4px;
-      right: 0;
-      background-color: white;
-      font-size: 22px;
-      padding: 4px;
-      border-radius: 4px;
-      cursor: pointer;
+    &-btn {
+      width: 100% !important;
     }
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
   }
 }
 </style>
