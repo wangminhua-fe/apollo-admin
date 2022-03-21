@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginFromRef" class="login-form">
+    <el-form ref="loginFormRef" class="login-form" :model="loginForm" :rules="loginRules">
       <div class="login-form-title">
         <h3 class="login-form-title__content">用户登录</h3>
       </div>
@@ -9,25 +9,90 @@
         <span class="login-form-svg">
           <svg-icon icon="user" />
         </span>
-        <el-input placeholder="username" name="username" type="text" />
+        <el-input v-model="loginForm.username" placeholder="username" name="username" type="text" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="login-form-svg">
           <svg-icon icon="password" />
         </span>
-        <el-input placeholder="password" name="password" />
-        <span class="login-form-svg__pwd">
-          <svg-icon icon="password" />
+        <el-input
+          v-model="loginForm.password"
+          placeholder="password"
+          name="password"
+          :type="passwordType"
+        />
+        <span class="login-form-svg__pwd" @click="handleChangePasswordType">
+          <svg-icon :icon="passwordSuffixIcon" />
         </span>
       </el-form-item>
 
-      <el-button type="primary" class="login-form-btn">登 录</el-button>
+      <el-button type="primary" class="login-form-btn" :loading="loading" @click="handleLogin"
+        >登 录</el-button
+      >
     </el-form>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import { useUserStore } from '@/store/modules/user'
+import { validatePassword } from './rules'
+
+const userStore = useUserStore()
+
+const loginForm = ref({
+  username: 'admin',
+  password: '123456',
+})
+
+const loginRules = ref({
+  username: [
+    {
+      required: true,
+      trigger: 'blur',
+      message: '请输入用户名',
+    },
+  ],
+  password: [
+    {
+      required: true,
+      trigger: 'blur',
+      validator: validatePassword(),
+    },
+  ],
+})
+
+const passwordType = ref('password')
+const passwordSuffixIcon = computed(() => {
+  return passwordType.value === 'password' ? 'eye' : 'eye-open'
+})
+
+const handleChangePasswordType = () => {
+  passwordType.value = passwordType.value === 'password' ? 'text' : 'password'
+}
+
+// 处理登录
+const loading = ref(false)
+const loginFormRef = ref(null)
+const handleLogin = () => {
+  loginFormRef.value.validate((valid) => {
+    if (!valid) {
+      return
+    }
+    loading.value = true
+    userStore
+      .login(loginForm.value)
+      .then(() => {
+        loading.value = false
+      })
+      .catch((error) => {
+        console.log(error)
+        loading.value = false
+      })
+  })
+}
+</script>
 
 <style lang="scss" scoped>
 $bg: #2d3a4b;
@@ -49,14 +114,14 @@ $cursor: #fff;
     margin: 0 auto;
     overflow: hidden;
 
-    ::v-deep .el-form-item {
+    :deep(.el-form-item) {
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(0, 0, 0, 0.1);
       border-radius: 5px;
       color: #454545;
     }
 
-    ::v-deep .el-input {
+    :deep(.el-input) {
       display: inline-block;
       height: 47px;
       width: 85%;
@@ -83,7 +148,6 @@ $cursor: #fff;
       &__pwd {
         position: absolute;
         right: 10px;
-        top: 7px;
         font-size: 16px;
         color: $dark_gray;
         cursor: pointer;
